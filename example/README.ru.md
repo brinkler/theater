@@ -138,8 +138,8 @@ class ServerWorkerFactory extends WorkerActorFactory {
 // Create server receiver pool router class
 class ServerReceiverPoolRouter extends PoolRouterActor {
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(
         workerFactory: ServerReceiverFactory(),
         routingStrategy: PoolRoutingStrategy.roundRobin,
         poolSize: 2);
@@ -149,8 +149,8 @@ class ServerReceiverPoolRouter extends PoolRouterActor {
 // Create server worker pool router class
 class ServerWorkerPoolRouter extends PoolRouterActor {
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(
         workerFactory: ServerWorkerFactory(),
         routingStrategy: PoolRoutingStrategy.roundRobin,
         poolSize: 4);

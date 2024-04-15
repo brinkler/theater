@@ -1,24 +1,9 @@
 part of theater.actor;
 
-class GroupRouterActorCell extends RouterActorCell<GroupRouterActor>
-    with UserActorCellMixin<GroupRouterActor> {
-  GroupRouterActorCell(
-      ActorPath path,
-      GroupRouterActor actor,
-      LocalActorRef parentRef,
-      SendPort actorSystemSendPort,
-      LoggingProperties loggingProperties,
-      {Map<String, dynamic>? data,
-      void Function(ActorError)? onError,
-      void Function()? onKill})
-      : super(
-            path,
-            actor,
-            parentRef,
-            actor.createMailboxFactory().create(MailboxProperties(path)),
-            actorSystemSendPort,
-            loggingProperties,
-            onKill) {
+class GroupRouterActorCell extends RouterActorCell<GroupRouterActor> with UserActorCellMixin<GroupRouterActor> {
+  GroupRouterActorCell(ActorPath path, GroupRouterActor actor, LocalActorRef parentRef, SendPort actorSystemSendPort, LoggingProperties loggingProperties,
+      {Map<String, dynamic>? data, void Function(ActorError)? onError, void Function()? onKill})
+      : super(path, actor, parentRef, actor.createMailboxFactory().create(MailboxProperties(path)), actorSystemSendPort, loggingProperties, onKill) {
     if (onError != null) {
       _errorController.stream.listen(onError);
     }
@@ -31,17 +16,15 @@ class GroupRouterActorCell extends RouterActorCell<GroupRouterActor>
             actorRef: ref,
             parentRef: parentRef,
             handlingType: _mailbox.handlingType,
-            deployementStrategy: actor.createDeployementStrategy(),
+            DeploymentStrategy: actor.createDeploymentStrategy(),
             supervisorStrategy: actor.createSupervisorStrategy(),
             mailboxType: _mailbox.type,
             actorSystemSendPort: _actorSystemSendPort,
-            loggingProperties: ActorLoggingProperties.fromLoggingProperties(
-                loggingProperties, actor.createLoggingPropeties()),
+            loggingProperties: ActorLoggingProperties.fromLoggingProperties(loggingProperties, actor.createLoggingPropeties()),
             data: data),
         RouterActorIsolateHandlerFactory(),
         GroupRouterActorContextBuilder(), onError: (error) {
-      _errorController.sink
-          .add(ActorError(path, error.object, error.stackTrace));
+      _errorController.sink.add(ActorError(path, error.object, error.stackTrace));
     });
 
     _isolateSupervisor.messages.listen(_handleMessageFromIsolate);
@@ -68,12 +51,7 @@ class GroupRouterActorCell extends RouterActorCell<GroupRouterActor>
       }
     } else if (event is ActorErrorEscalated) {
       _errorController.sink.add(ActorError(
-          path,
-          ActorChildException(
-              message: 'Untyped escalate error from [' +
-                  event.error.path.toString() +
-                  '].'),
-          StackTrace.current,
+          path, ActorChildException(message: 'Untyped escalate error from [' + event.error.path.toString() + '].'), StackTrace.current,
           parent: event.error));
     }
   }

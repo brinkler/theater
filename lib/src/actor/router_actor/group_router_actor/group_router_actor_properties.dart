@@ -1,10 +1,10 @@
 part of theater.actor;
 
 class GroupRouterActorProperties extends RouterActorProperties {
-  final GroupDeployementStrategy deployementStrategy;
+  final GroupDeploymentStrategy DeploymentStrategy;
 
   GroupRouterActorProperties(
-      {required this.deployementStrategy,
+      {required this.DeploymentStrategy,
       required super.handlingType,
       required super.actorRef,
       required super.supervisorStrategy,

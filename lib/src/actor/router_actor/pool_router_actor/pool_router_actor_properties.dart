@@ -1,10 +1,10 @@
 part of theater.actor;
 
 class PoolRouterActorProperties extends RouterActorProperties {
-  final PoolDeployementStrategy deployementStrategy;
+  final PoolDeploymentStrategy DeploymentStrategy;
 
   PoolRouterActorProperties(
-      {required this.deployementStrategy,
+      {required this.DeploymentStrategy,
       required super.actorRef,
       required super.supervisorStrategy,
       required super.parentRef,

@@ -1105,10 +1105,10 @@ class FirstTestActor extends UntypedActor {
 
 // Create router class
 class TestRouter extends GroupRouterActor {
-  // Override createDeployementStrategy method, configurate group router actor
+  // Override createDeploymentStrategy method, configurate group router actor
   @override
-  GroupDeployementStrategy createDeployementStrategy() {
-    return GroupDeployementStrategy(
+  GroupDeploymentStrategy createDeploymentStrategy() {
+    return GroupDeploymentStrategy(
         routingStrategy: GroupRoutingStrategy.broadcast,
         group: [
           ActorInfo(name: 'second_test_actor', actor: SecondTestActor()),
@@ -1207,10 +1207,10 @@ class TestActor extends UntypedActor {
 
 // Create pool router class
 class TestRouter extends PoolRouterActor {
-  // Override createDeployementStrategy method, configurate group router actor
+  // Override createDeploymentStrategy method, configurate group router actor
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(
         workerFactory: TestWorkerFactory(),
         routingStrategy: PoolRoutingStrategy.random,
         poolSize: 5);
