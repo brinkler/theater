@@ -5,6 +5,8 @@ import 'dart:core';
 import 'dart:isolate';
 import 'dart:math';
 
+import 'package:theater/src/logging.dart';
+
 import 'actor_system.dart';
 import 'supervising.dart';
 import 'dispatch.dart';
@@ -17,7 +19,7 @@ import 'isolate.dart';
 part 'actor/exception/actor_child_exception.dart';
 part 'actor/exception/actor_system_exception.dart';
 part 'actor/exception/actor_context_exception.dart';
-part 'actor/exception/pool_deployement_strategy_exception.dart';
+part 'actor/exception/pool_deployment_strategy_exception.dart';
 part 'actor/exception/actor_data_store_exception.dart';
 
 part 'actor/actor.dart';
@@ -40,6 +42,10 @@ part 'actor/actor_factory.dart';
 part 'actor/actor_data_store.dart';
 part 'actor/actor_event.dart';
 part 'actor/actor_action.dart';
+
+part 'actor/actor_notifier/actor_notifier.dart';
+part 'actor/actor_notifier/subscriber_data.dart';
+part 'actor/actor_notifier/typed_notify_subscription.dart';
 
 part 'actor/user_actor_cell_mixin.dart';
 part 'actor/user_actor_context_mixin.dart';
@@ -125,10 +131,10 @@ part 'actor/router_actor/pool_router_actor/pool_router_actor_properties.dart';
 part 'actor/router_actor/pool_router_actor/pool_router_actor_cell.dart';
 part 'actor/router_actor/pool_router_actor/pool_router_actor_cell_factory.dart';
 
-part 'actor/router_actor/deployement_strategy/group_deployement_strategy/group_deployement_strategy.dart';
-part 'actor/router_actor/deployement_strategy/group_deployement_strategy/actor_info.dart';
-part 'actor/router_actor/deployement_strategy/pool_deployement_strategy.dart';
-part 'actor/router_actor/deployement_strategy/router_deployement_strategy.dart';
+part 'actor/router_actor/deployment_strategy/group_deployment_strategy/group_deployment_strategy.dart';
+part 'actor/router_actor/deployment_strategy/group_deployment_strategy/actor_info.dart';
+part 'actor/router_actor/deployment_strategy/pool_deployment_strategy.dart';
+part 'actor/router_actor/deployment_strategy/router_deployment_strategy.dart';
 
 part 'actor/worker_actor/worker_actor.dart';
 part 'actor/worker_actor/worker_actor_cell.dart';

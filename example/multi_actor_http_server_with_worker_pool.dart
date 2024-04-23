@@ -15,8 +15,7 @@ class ServerReceiver extends WorkerActor {
       var number = int.parse(request.requestedUri.queryParameters['number']!);
 
       // Send message to worker pool router
-      var subscription =
-          context.sendAndSubscribe('test_system/root/user/workers', number);
+      var subscription = context.sendAndSubscribe('test_system/root/user/workers', number);
 
       // Set onResponse handler
       subscription.onResponse((response) {
@@ -35,8 +34,7 @@ class ServerReceiver extends WorkerActor {
 
 // Create server worker actor class
 class ServerWorker extends WorkerActor {
-  int _fibonacci(int number) =>
-      number <= 2 ? 1 : _fibonacci(number - 1) + _fibonacci(number - 2);
+  int _fibonacci(int number) => number <= 2 ? 1 : _fibonacci(number - 1) + _fibonacci(number - 2);
 
   // Override onStart method which will be executed at actor startup
   @override
@@ -65,22 +63,16 @@ class ServerWorkerFactory extends WorkerActorFactory {
 // Create server receiver pool router class
 class ServerReceiverPoolRouter extends PoolRouterActor {
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
-        workerFactory: ServerReceiverFactory(),
-        routingStrategy: PoolRoutingStrategy.roundRobin,
-        poolSize: 2);
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(workerFactory: ServerReceiverFactory(), routingStrategy: PoolRoutingStrategy.roundRobin, poolSize: 2);
   }
 }
 
 // Create server worker pool router class
 class ServerWorkerPoolRouter extends PoolRouterActor {
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
-        workerFactory: ServerWorkerFactory(),
-        routingStrategy: PoolRoutingStrategy.roundRobin,
-        poolSize: 4);
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(workerFactory: ServerWorkerFactory(), routingStrategy: PoolRoutingStrategy.roundRobin, poolSize: 4);
   }
 }
 

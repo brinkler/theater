@@ -4,6 +4,6 @@ part of theater.actor;
 ///
 /// Router is a special actor who routing messages between their children using routing strategy.
 abstract class RouterActor extends NodeActor<RouterActorContext> {
-  /// Creates instanse of [RouterDeployementStrategy] which the used for initialize router actor.
-  RouterDeployementStrategy createDeployementStrategy();
+  /// Creates instanse of [RouterDeploymentStrategy] which the used for initialize router actor.
+  RouterDeploymentStrategy createDeploymentStrategy();
 }

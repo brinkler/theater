@@ -33,8 +33,7 @@ class TestGroupRouterActor_1 extends GroupRouterActor {
   }
 
   @override
-  GroupDeployementStrategy createDeployementStrategy() {
-    return GroupDeployementStrategy(
-        routingStrategy: GroupRoutingStrategy.broadcast, group: []);
+  GroupDeploymentStrategy createDeploymentStrategy() {
+    return GroupDeploymentStrategy(routingStrategy: GroupRoutingStrategy.broadcast, group: []);
   }
 }

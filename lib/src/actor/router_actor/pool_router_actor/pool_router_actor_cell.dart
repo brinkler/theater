@@ -1,19 +1,9 @@
 part of theater.actor;
 
-class PoolRouterActorCell extends RouterActorCell<PoolRouterActor>
-    with UserActorCellMixin<PoolRouterActor> {
-  PoolRouterActorCell(ActorPath path, PoolRouterActor actor,
-      LocalActorRef parentRef, SendPort actorSystemMessagePort,
-      {Map<String, dynamic>? data,
-      void Function(ActorError)? onError,
-      void Function()? onKill})
-      : super(
-            path,
-            actor,
-            parentRef,
-            actor.createMailboxFactory().create(MailboxProperties(path)),
-            actorSystemMessagePort,
-            onKill) {
+class PoolRouterActorCell extends RouterActorCell<PoolRouterActor> with UserActorCellMixin<PoolRouterActor> {
+  PoolRouterActorCell(ActorPath path, PoolRouterActor actor, LocalActorRef parentRef, SendPort actorSystemSendPort, LoggingProperties loggingProperties,
+      {Map<String, dynamic>? data, void Function(ActorError)? onError, void Function()? onKill})
+      : super(path, actor, parentRef, actor.createMailboxFactory().create(MailboxProperties(path)), actorSystemSendPort, loggingProperties, onKill) {
     if (onError != null) {
       _errorController.stream.listen(onError);
     }
@@ -25,15 +15,16 @@ class PoolRouterActorCell extends RouterActorCell<PoolRouterActor>
         PoolRouterActorProperties(
             actorRef: ref,
             parentRef: parentRef,
-            deployementStrategy: actor.createDeployementStrategy(),
+            handlingType: _mailbox.handlingType,
+            DeploymentStrategy: actor.createDeploymentStrategy(),
             supervisorStrategy: actor.createSupervisorStrategy(),
             mailboxType: _mailbox.type,
-            actorSystemMessagePort: _actorSystemMessagePort,
+            actorSystemSendPort: _actorSystemSendPort,
+            loggingProperties: ActorLoggingProperties.fromLoggingProperties(loggingProperties, actor.createLoggingPropeties()),
             data: data),
         RouterActorIsolateHandlerFactory(),
         PoolRouterActorContextBuilder(), onError: (error) {
-      _errorController.sink
-          .add(ActorError(path, error.object, error.stackTrace));
+      _errorController.sink.add(ActorError(path, error.object, error.stackTrace));
     });
 
     _isolateSupervisor.messages.listen(_handleMessageFromIsolate);
@@ -60,12 +51,7 @@ class PoolRouterActorCell extends RouterActorCell<PoolRouterActor>
       }
     } else if (event is ActorErrorEscalated) {
       _errorController.sink.add(ActorError(
-          path,
-          ActorChildException(
-              message: 'Untyped escalate error from [' +
-                  event.error.path.toString() +
-                  '].'),
-          StackTrace.current,
+          path, ActorChildException(message: 'Untyped escalate error from [' + event.error.path.toString() + '].'), StackTrace.current,
           parent: event.error));
     }
   }

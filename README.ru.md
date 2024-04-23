@@ -45,6 +45,7 @@
     - [Маршрутизатор пула](#маршрутизатор-пула)
 - [Передача данных в актор](#передача-данных-в-актор)
 - [Наблюдение и обработка ошибок](#наблюдение-и-обработка-ошибок)
+- [Логирование](#логирование)
 - [Удаленное взаимодействие [Бета]](#удаленное-взаимодействие-бета)
   - [Настройка системы акторов](#настройка-системы-акторов)
     - [Сериализация](#сериализация)
@@ -184,7 +185,7 @@ void main(List<String> arguments) async {
 
 <div align="center">
 
-![](https://i.ibb.co/qC98V4j/Actor-tree.png)
+![](docs/images/actor-tree.png)
   
 </div>
   
@@ -1106,10 +1107,10 @@ class FirstTestActor extends UntypedActor {
 
 // Create router class
 class TestRouter extends GroupRouterActor {
-  // Override createDeployementStrategy method, configurate group router actor
+  // Override createDeploymentStrategy method, configurate group router actor
   @override
-  GroupDeployementStrategy createDeployementStrategy() {
-    return GroupDeployementStrategy(
+  GroupDeploymentStrategy createDeploymentStrategy() {
+    return GroupDeploymentStrategy(
         routingStrategy: GroupRoutingStrategy.broadcast,
         group: [
           ActorInfo(name: 'second_test_actor', actor: SecondTestActor()),
@@ -1168,7 +1169,7 @@ Second actor received message: First hello!
 
 <div align="center">
 
-![](https://i.ibb.co/ZzHhr9q/group-router-example.png)
+![](docs/images/group-router.png)
 
 </div>
   
@@ -1208,10 +1209,10 @@ class TestActor extends UntypedActor {
 
 // Create pool router class
 class TestRouter extends PoolRouterActor {
-  // Override createDeployementStrategy method, configurate group router actor
+  // Override createDeploymentStrategy method, configurate group router actor
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(
         workerFactory: TestWorkerFactory(),
         routingStrategy: PoolRoutingStrategy.random,
         poolSize: 5);
@@ -1256,7 +1257,7 @@ void main(List<String> arguments) async {
 
 <div align="center">
   
-![](https://i.ibb.co/nPNLyDk/pool-router-example.png)
+![](docs/images/pool-router.png)
   
 </div>
 
@@ -1424,9 +1425,13 @@ void main(List<String> arguments) async {
 
 <div align="center">
 
-![](https://i.ibb.co/KwfMwwq/error-handling-example.png)
+![](docs/images/supervising.png)
 
 </div>
+
+# Логирование
+
+
 
 # Удаленное взаимодействие [Бета]
 
@@ -1473,9 +1478,9 @@ void main() {
 
 В Dart отсутствует какой либо сериализатор/десериализатор в JSON работающий с объектами без необходимости самостоятельно прописывать toJson и fromJson методы, основанный не на генерации кода.
 
-Подобный сериализатор можно реализовать при помощи библиотеки dart:mirros, однако она не доступна при AOT компиляции и соответственно в Flutter приложениях она и пакеты использующие её недоступны. А так же dart:mirros в данный момент по сути не поддерживается и при помощи неё практически невозможно нормально работать с nullable типами.
-
 Поэтому я решил добавить возможность обозначать один раз при создании системы акторов логику сериализации и десериализации входящих и исходящих из системы акторов сообщений. Каждое сообщение попадающее или отправляемое из системы акторов проходит стадию сериализации и десериализации.
+
+Если вы используете только JIT компиляцию (у вас не Flutter приложение) вы можете воспользоваться созданным мной пакетом для сериализации и десериализации JSON - [Emerald](https://pub.dev/packages/emerald).
 
 Каждое сообщение входящие и исходящие из системы акторов помимо содержимого сообщения так же имеет тег для более удобной серилизации и десериализации.
 

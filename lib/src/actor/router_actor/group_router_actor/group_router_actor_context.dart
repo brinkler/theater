@@ -3,17 +3,11 @@ part of theater.actor;
 /// The class used by [GroupRouterActor] to communicate with other actors in the actor system.
 ///
 /// Receive messages from other actors, create a group of child actors and control their life cycle.
-class GroupRouterActorContext
-    extends RouterActorContext<GroupRouterActorProperties> {
-  GroupRouterActorContext(
-      IsolateContext isolateContext, GroupRouterActorProperties actorProperties)
-      : super(isolateContext, actorProperties) {
+class GroupRouterActorContext extends RouterActorContext<GroupRouterActorProperties> {
+  GroupRouterActorContext(IsolateContext isolateContext, GroupRouterActorProperties actorProperties) : super(isolateContext, actorProperties) {
     _isolateContext.messages.listen(_handleMessageFromSupervisor);
 
-    _messageController.stream.listen(_sendMessageToWorkers);
-
-    _childErrorSubscription = _childErrorController.stream
-        .listen((error) => _handleChildError(error));
+    _childErrorSubscription = _childErrorController.stream.listen((error) => _handleChildError(error));
   }
 
   @override
@@ -22,7 +16,7 @@ class GroupRouterActorContext
   }
 
   Future<void> _initializeGroup() async {
-    var group = _actorProperties.deployementStrategy.group;
+    var group = _actorProperties.DeploymentStrategy.group;
 
     _childErrorSubscription.pause();
 
@@ -43,17 +37,16 @@ class GroupRouterActorContext
       var actorPath = path.createChild(group[i].name);
 
       if (_children.map((e) => e.path).contains(actorPath)) {
-        throw ActorContextException(
-            message:
-                'actor contains child actor with name [' + group[i].name + ']');
+        throw ActorContextException(message: 'actor contains child actor with name [' + group[i].name + ']');
       }
 
       var actorCell = group[i].actor._createActorCellFactory().create(
           actorPath,
           group[i].actor,
           NodeActorCellProperties(
-              actorSystemMessagePort: _actorProperties.actorSystemMessagePort,
+              actorSystemSendPort: _actorProperties.actorSystemSendPort,
               parentRef: _actorProperties.actorRef,
+              loggingProperties: _actorProperties.loggingProperties,
               data: group[i].data));
 
       actorCell.errors.listen((error) => _childErrorController.sink.add(error));
@@ -87,7 +80,7 @@ class GroupRouterActorContext
 
   void _handleMailboxMessage(MailboxMessage message) {
     if (message is ActorMailboxMessage) {
-      _messageController.sink.add(message);
+      _handleActorMailboxMessage(message);
 
       if (_actorProperties.mailboxType == MailboxType.reliable) {
         _isolateContext.supervisorMessagePort.send(ActorReceivedMessage());
@@ -96,22 +89,22 @@ class GroupRouterActorContext
   }
 
   @override
+  void _handleActorMailboxMessage(message) {
+    _sendMessageToWorkers(message);
+  }
+
+  @override
   void _handleRoutingMessage(RoutingMessage message) {
     if (message.recipientPath == _actorProperties.path) {
-      _actorProperties.actorRef.sendMessage(ActorMailboxMessage(message.data,
-          feedbackPort: message.feedbackPort));
+      _actorProperties.actorRef.send(ActorMailboxMessage(message.data, feedbackPort: message.feedbackPort));
     } else {
       if (message.recipientPath.depthLevel > _actorProperties.path.depthLevel &&
-          List.of(message.recipientPath.segments
-                  .getRange(0, _actorProperties.path.segments.length))
-              .equal(_actorProperties.path.segments)) {
+          List.of(message.recipientPath.segments.getRange(0, _actorProperties.path.segments.length)).equal(_actorProperties.path.segments)) {
         var isSended = false;
 
         for (var child in _children) {
-          if (List.from(message.recipientPath.segments
-                  .getRange(0, _actorProperties.path.segments.length + 1))
-              .equal(child.path.segments)) {
-            child.ref.sendMessage(message);
+          if (List.from(message.recipientPath.segments.getRange(0, _actorProperties.path.segments.length + 1)).equal(child.path.segments)) {
+            child.ref.send(message);
             isSended = true;
             break;
           }
@@ -121,13 +114,13 @@ class GroupRouterActorContext
           message.notFound();
         }
       } else {
-        _actorProperties.parentRef.sendMessage(message);
+        _actorProperties.parentRef.send(message);
       }
     }
   }
 
   void _sendMessageToWorkers(MailboxMessage message) {
-    var routingStrategy = _actorProperties.deployementStrategy.routingStrategy;
+    var routingStrategy = _actorProperties.DeploymentStrategy.routingStrategy;
 
     if (routingStrategy == GroupRoutingStrategy.broadcast) {
       _sendBroadcast(message);

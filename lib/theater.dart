@@ -1,7 +1,6 @@
 library theater;
 
-export 'src/actor_system.dart'
-    show ActorSystem, ActorSystemBuilder, ActorSystemAsyncBuilder;
+export 'src/actor_system.dart' show ActorSystem, ActorSystemBuilder, ActorSystemAsyncBuilder;
 
 export 'src/actor.dart'
     show
@@ -23,19 +22,25 @@ export 'src/actor.dart'
         GroupRouterActorContext,
         PoolRouterActorContext,
         WorkerActorFactory,
-        PoolDeployementStrategy,
-        GroupDeployementStrategy,
+        PoolDeploymentStrategy,
+        GroupDeploymentStrategy,
         ActorInfo,
         WorkerActorProperties,
         PoolRouterActorProperties,
         GroupRouterActorProperties,
         UntypedActorProperties,
-        ActorParentMixin;
+        ActorParentMixin,
+        HandlePriority;
 
 export 'src/supervising.dart'
     show
         SupervisorStrategy,
         Directive,
+        IgnoreDirective,
+        RestartDirective,
+        KillDirective,
+        PauseDirective,
+        EscalateDirective,
         Decider,
         AllForOneStrategy,
         OneForOneStrategy;
@@ -63,19 +68,12 @@ export 'src/dispatch.dart'
         LocalActorRef,
         CancellationTokenRef,
         RepeatedlyActionTokenRef,
-        OneShotActionTokenRef;
+        OneShotActionTokenRef,
+        RemoteActorRef;
 
 export 'src/routing.dart';
 
-export 'src/util.dart'
-    show
-        Scheduler,
-        CancelEvent,
-        CancellationToken,
-        RepeatedlyActionToken,
-        OneShotActionToken,
-        RepeatedlyActionContext,
-        OneShotActionContext;
+export 'src/util.dart' show Scheduler, CancelEvent, CancellationToken, RepeatedlyActionToken, OneShotActionToken, RepeatedlyActionContext, OneShotActionContext;
 
 export 'src/remote.dart'
     show
@@ -86,3 +84,5 @@ export 'src/remote.dart'
         TcpConnectorConfiguration,
         ActorMessageTransportSerializer,
         ActorMessageTransportDeserializer;
+
+export 'src/logging.dart' show LogLevel, DebugLevel, LoggingProperties, TheaterLoggerFactory;

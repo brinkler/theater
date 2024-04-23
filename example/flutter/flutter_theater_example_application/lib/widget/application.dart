@@ -12,9 +12,9 @@ class Application extends StatelessWidget {
       home: Scaffold(
         body: Container(
           margin: const EdgeInsets.all(50),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               FibonacciCalculator(),
               Padding(
                   padding: EdgeInsets.only(top: 10),

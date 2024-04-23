@@ -18,13 +18,10 @@ class TestActor extends UntypedActor {
 
 // Create pool router class
 class TestRouter extends PoolRouterActor {
-  // Override createDeployementStrategy method, configurate group router actor
+  // Override createDeploymentStrategy method, configurate group router actor
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
-        workerFactory: TestWorkerFactory(),
-        routingStrategy: PoolRoutingStrategy.random,
-        poolSize: 5);
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(workerFactory: TestWorkerFactory(), routingStrategy: PoolRoutingStrategy.random, poolSize: 5);
   }
 }
 
@@ -34,10 +31,7 @@ class TestWorker extends WorkerActor {
   Future<void> onStart(context) async {
     // Set handler to all String type messages which actor received
     context.receive<String>((message) async {
-      print('Received by the worker with path: ' +
-          context.path.toString() +
-          ', message: ' +
-          message);
+      print('Received by the worker with path: ' + context.path.toString() + ', message: ' + message);
 
       return;
     });

@@ -3,19 +3,13 @@ part of theater.actor;
 /// The class used by [PoolRouterActor] to communicate with other actors in the actor system.
 ///
 /// Receive messages from other actors, create a pool of child actors and control their life cycle.
-class PoolRouterActorContext
-    extends RouterActorContext<PoolRouterActorProperties> {
+class PoolRouterActorContext extends RouterActorContext<PoolRouterActorProperties> {
   final Map<ActorCell, int> _loadingMap = {};
 
-  PoolRouterActorContext(
-      IsolateContext isolateContext, PoolRouterActorProperties actorProperties)
-      : super(isolateContext, actorProperties) {
+  PoolRouterActorContext(IsolateContext isolateContext, PoolRouterActorProperties actorProperties) : super(isolateContext, actorProperties) {
     _isolateContext.messages.listen(_handleMessageFromSupervisor);
 
-    _messageController.stream.listen(_sendMessageToWorkers);
-
-    _childErrorSubscription = _childErrorController.stream
-        .listen((error) => _handleChildError(error));
+    _childErrorSubscription = _childErrorController.stream.listen((error) => _handleChildError(error));
   }
 
   @override
@@ -24,7 +18,7 @@ class PoolRouterActorContext
   }
 
   Future<void> _initializePool() async {
-    var actor = _actorProperties.deployementStrategy.workerFactory.create();
+    var actor = _actorProperties.DeploymentStrategy.workerFactory.create();
 
     var actorCellFactory = actor._createActorCellFactory();
 
@@ -36,7 +30,7 @@ class PoolRouterActorContext
       errors.add(error);
     });
 
-    for (var i = 0; i < _actorProperties.deployementStrategy.poolSize; i++) {
+    for (var i = 0; i < _actorProperties.DeploymentStrategy.poolSize; i++) {
       if (errors.isNotEmpty) {
         await errorSubscription.cancel();
         _childErrorSubscription.resume();
@@ -49,9 +43,10 @@ class PoolRouterActorContext
           actorPath,
           actor,
           WorkerActorCellProperties(
-              actorSystemMessagePort: _actorProperties.actorSystemMessagePort,
+              actorSystemSendPort: _actorProperties.actorSystemSendPort,
               parentRef: _actorProperties.actorRef,
-              data: _actorProperties.deployementStrategy.data));
+              loggingProperties: ActorLoggingProperties.fromLoggingProperties(_actorProperties.loggingProperties, actor.createLoggingPropeties()),
+              data: _actorProperties.DeploymentStrategy.data));
 
       actorCell.errors.listen((error) => _childErrorController.sink.add(error));
 
@@ -92,7 +87,7 @@ class PoolRouterActorContext
 
   void _handleMailboxMessage(MailboxMessage message) {
     if (message is ActorMailboxMessage) {
-      _messageController.sink.add(message);
+      _handleActorMailboxMessage(message);
 
       if (_actorProperties.mailboxType == MailboxType.reliable) {
         _isolateContext.supervisorMessagePort.send(ActorReceivedMessage());
@@ -100,8 +95,27 @@ class PoolRouterActorContext
     }
   }
 
+  @override
+  void _handleActorMailboxMessage(ActorMailboxMessage message) {
+    _sendMessageToWorkers(message);
+  }
+
+  @override
+  void _handleRoutingMessage(RoutingMessage message) {
+    if (message.recipientPath == _actorProperties.path) {
+      _actorProperties.actorRef.send(ActorMailboxMessage(message.data, feedbackPort: message.feedbackPort));
+    } else {
+      if (message.recipientPath.depthLevel > _actorProperties.path.depthLevel &&
+          List.of(message.recipientPath.segments.getRange(0, _actorProperties.path.segments.length)).equal(_actorProperties.path.segments)) {
+        message.notFound();
+      } else {
+        _actorProperties.parentRef.send(message);
+      }
+    }
+  }
+
   void _sendMessageToWorkers(MailboxMessage message) {
-    var routingStrategy = _actorProperties.deployementStrategy.routingStrategy;
+    var routingStrategy = _actorProperties.DeploymentStrategy.routingStrategy;
 
     if (routingStrategy == PoolRoutingStrategy.broadcast) {
       _sendBroadcast(message);
@@ -123,25 +137,8 @@ class PoolRouterActorContext
       }
     }
 
-    minimal.key.ref.sendMessage(message);
+    minimal.key.ref.send(message);
 
     _loadingMap[minimal.key] = _loadingMap[minimal.key]! + 1;
-  }
-
-  @override
-  void _handleRoutingMessage(RoutingMessage message) {
-    if (message.recipientPath == _actorProperties.path) {
-      _actorProperties.actorRef.sendMessage(ActorMailboxMessage(message.data,
-          feedbackPort: message.feedbackPort));
-    } else {
-      if (message.recipientPath.depthLevel > _actorProperties.path.depthLevel &&
-          List.of(message.recipientPath.segments
-                  .getRange(0, _actorProperties.path.segments.length))
-              .equal(_actorProperties.path.segments)) {
-        message.notFound();
-      } else {
-        _actorProperties.parentRef.sendMessage(message);
-      }
-    }
   }
 }

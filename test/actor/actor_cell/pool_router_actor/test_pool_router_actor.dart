@@ -33,8 +33,8 @@ class TestPoolRouterActor_1 extends PoolRouterActor {
   }
 
   @override
-  PoolDeployementStrategy createDeployementStrategy() {
-    return PoolDeployementStrategy(
+  PoolDeploymentStrategy createDeploymentStrategy() {
+    return PoolDeploymentStrategy(
       routingStrategy: PoolRoutingStrategy.broadcast,
       workerFactory: TestWorkerFactory(),
       poolSize: 0,
