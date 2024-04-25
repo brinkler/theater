@@ -16,9 +16,9 @@ void main() {
     });
 
     test(
-        '.parceAbsolute(). Creates actor path from string which contains absolute path.',
+        '.parseAbsolute(). Creates actor path from string which contains absolute path.',
         () {
-      var path = ActorPath.parceAbsolute('test_system/test/test_child');
+      var path = ActorPath.parseAbsolute('test_system/test/test_child');
 
       expect(path.segments, ['test', 'test_child']);
       expect(path.toString(), 'test_system/test/test_child');
@@ -26,9 +26,9 @@ void main() {
     });
 
     test(
-        '.parceRelative(). Creates actor path from string whuck contains relative path.',
+        '.parseRelative(). Creates actor path from string whuck contains relative path.',
         () {
-      var path = ActorPath.parceRelative('../test_child', parentPath);
+      var path = ActorPath.parseRelative('../test_child', parentPath);
 
       expect(path.segments, ['test', 'test_child']);
       expect(path.toString(), 'test_system/test/test_child');

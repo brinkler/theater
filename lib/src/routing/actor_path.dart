@@ -44,10 +44,10 @@ class ActorPath {
     }
   }
 
-  /// Creates actor path trying parce [path] like absolute path.
+  /// Creates actor path trying parse [path] like absolute path.
   ///
   /// Absolute path should start from [ActorSystem] name.
-  factory ActorPath.parceAbsolute(String path) {
+  factory ActorPath.parseAbsolute(String path) {
     var pathSegments =
         path.split('/').where((element) => element.isNotEmpty).toList();
 
@@ -66,14 +66,14 @@ class ActorPath {
     }
   }
 
-  /// Creates actor path trying parce [path] like relative path.
+  /// Creates actor path trying parse [path] like relative path.
   ///
   /// Relative path should start from '../'.
   ///
   /// Relative path indicated from [currentPath].
   ///
   /// For example
-  factory ActorPath.parceRelative(String path, ActorPath currentPath) {
+  factory ActorPath.parseRelative(String path, ActorPath currentPath) {
     if (isRelativePath(path)) {
       var pathSegments = path.split('/')..removeAt(0);
 

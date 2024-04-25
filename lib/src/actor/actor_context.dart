@@ -86,7 +86,7 @@ abstract class ActorContext<P extends ActorProperties>
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   @override
   void send(String path, dynamic data, {Duration? delay}) {
-    var recipientPath = _parcePath(path);
+    var recipientPath = _parsePath(path);
 
     var message = ActorRoutingMessage(data, recipientPath);
 
@@ -118,7 +118,7 @@ abstract class ActorContext<P extends ActorProperties>
   @override
   MessageSubscription sendAndSubscribe(String path, dynamic data,
       {Duration? delay}) {
-    var recipientPath = _parcePath(path);
+    var recipientPath = _parsePath(path);
 
     var receivePort = ReceivePort();
 
@@ -189,7 +189,7 @@ abstract class ActorContext<P extends ActorProperties>
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<LocalActorRef?> getLocalActorRef(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var receivePort = ReceivePort();
 
@@ -216,7 +216,7 @@ abstract class ActorContext<P extends ActorProperties>
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<bool> isExistLocalActorRef(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var receivePort = ReceivePort();
 
@@ -246,11 +246,11 @@ abstract class ActorContext<P extends ActorProperties>
   }
 
   /// Used for parcing [ActorPath] from path string.
-  ActorPath _parcePath(String path) {
+  ActorPath _parsePath(String path) {
     if (ActorPath.isRelativePath(path)) {
-      return ActorPath.parceRelative(path, _actorProperties.path);
+      return ActorPath.parseRelative(path, _actorProperties.path);
     } else {
-      return ActorPath.parceAbsolute(path);
+      return ActorPath.parseAbsolute(path);
     }
   }
 

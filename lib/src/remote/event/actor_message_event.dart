@@ -10,7 +10,7 @@ class ActorMessageEvent extends MessageEvent {
   ActorMessageEvent(this.path, this.tag, this.data);
 
   ActorMessageEvent.fromJson(Map<String, dynamic> json)
-      : path = ActorPath.parceAbsolute(json['path']),
+      : path = ActorPath.parseAbsolute(json['path']),
         tag = json['tag'],
         data = json['data'];
 

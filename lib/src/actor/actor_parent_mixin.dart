@@ -124,7 +124,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> killChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 
@@ -150,7 +150,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> startChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 
@@ -180,7 +180,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> pauseChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 
@@ -206,7 +206,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> resumeChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 
@@ -232,7 +232,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> restartChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 
@@ -260,7 +260,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   Future<void> deleteChild(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     var actorCell = _findChild(actorPath);
 

@@ -401,7 +401,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
 
   /// Starts top level actor in actor system with [path].
   Future<void> startTopLevelActor(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     if (_isTopLevelActorExist(actorPath)) {
       var receivePort = ReceivePort();
@@ -424,7 +424,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
 
   /// Pauses top level actor in actor system with [path].
   Future<void> pauseTopLevelActor(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     if (_isTopLevelActorExist(actorPath)) {
       var receivePort = ReceivePort();
@@ -447,7 +447,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
 
   /// Resumes top level actor in actor system with [path].
   Future<void> resumeTopLevelActor(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     if (_isTopLevelActorExist(actorPath)) {
       var receivePort = ReceivePort();
@@ -470,7 +470,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
 
   /// Kills top level actor in actor system with [path].
   Future<void> killTopLevelActor(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     if (_isTopLevelActorExist(actorPath)) {
       var receivePort = ReceivePort();
@@ -493,7 +493,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
 
   /// Deletes top level actor in actor system with [path].
   Future<void> deleteTopLevelActor(String path) async {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     if (_isTopLevelActorExist(actorPath)) {
       var receivePort = ReceivePort();
@@ -580,7 +580,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   @override
   void send(String path, dynamic data, {Duration? delay}) {
-    var recipientPath = _parcePath(path);
+    var recipientPath = _parsePath(path);
 
     if (delay != null) {
       Future.delayed(delay, () {
@@ -608,7 +608,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
   @override
   MessageSubscription sendAndSubscribe(String path, dynamic data,
       {Duration? delay}) {
-    var recipientPath = _parcePath(path);
+    var recipientPath = _parsePath(path);
 
     var receivePort = ReceivePort();
 
@@ -626,11 +626,11 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
   }
 
   /// Used for parcing [ActorPath] from path string.
-  ActorPath _parcePath(String path) {
+  ActorPath _parsePath(String path) {
     if (ActorPath.isRelativePath(path)) {
-      return ActorPath.parceRelative(path, _userGuardianPath);
+      return ActorPath.parseRelative(path, _userGuardianPath);
     } else {
-      return ActorPath.parceAbsolute(path);
+      return ActorPath.parseAbsolute(path);
     }
   }
 
@@ -667,7 +667,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   LocalActorRef? getLocalActorRef(String path) {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     return _userActorRegister.getRefByPath(actorPath);
   }
@@ -685,7 +685,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
   ///
   /// Absolute path given by the full path to the actor from the name of the system of actors.
   bool isExistLocalActorRef(String path) {
-    var actorPath = _parcePath(path);
+    var actorPath = _parsePath(path);
 
     return _userActorRegister.isExistsByPath(actorPath);
   }
@@ -711,7 +711,7 @@ class ActorSystem implements ActorRefFactory<NodeActor>, ActorMessageSender {
       }
 
       if (remoteSource != null) {
-        var actorPath = ActorPath.parceAbsolute(path);
+        var actorPath = ActorPath.parseAbsolute(path);
 
         return remoteSource.createRemoteRef(actorPath);
       } else {

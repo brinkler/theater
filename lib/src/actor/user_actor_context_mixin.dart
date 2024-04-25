@@ -15,7 +15,7 @@ mixin UserActorContextMixin<P extends ActorProperties> on ActorContext<P> {
     if (!ActorPath.isRelativePath(path)) {
       var receivePort = ReceivePort();
 
-      var actorPath = ActorPath.parceAbsolute(path);
+      var actorPath = ActorPath.parseAbsolute(path);
 
       var action = ActorSystemCreateRemoteActorRef(
           receivePort.sendPort, connectionName, actorPath);
