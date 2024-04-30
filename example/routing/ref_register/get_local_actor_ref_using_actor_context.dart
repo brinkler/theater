@@ -23,8 +23,7 @@ class SecondTestActor extends UntypedActor {
   @override
   Future<void> onStart(UntypedActorContext context) async {
     // Get ref to actor with path 'test_system/root/user/first_test_actor' from ref register
-    var ref = await context
-        .getLocalActorRef('test_system/root/user/first_test_actor');
+    var ref = await context.getLocalActorRef('test_system/root/user/first_test_actor');
 
     // If ref exist (not null) send message
     ref?.send('Hello, from second actor!');

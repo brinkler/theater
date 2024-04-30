@@ -112,11 +112,11 @@ Actors can create child actors. And act as their supervisors (monitor their life
 
 ## Notes about the actors
 
-When an actor is paused, all his child actors are paused first.
+When an actor is paused, all child actors are paused first.
 
 Example: there are 3 actors A1, A2, A3. A1 created A2, A2 created A3. If A1 pauses A2, A3 will also be paused. In this case, A3 will be paused first, and then A2.
 
-When an actor is killed, all of his children are killed first.
+When an actor is killed, all children are killed first.
 
 Example: there are 3 actors A1, A2, A3. A1 created A2, A2 created A3. If A1 destroys A2, A3 will also be killed. In this case, A3 will be killed first, and then A2.
 
@@ -206,9 +206,9 @@ A special case of an actor-node is a root actor. This is an actor who has child 
 In the Theater, the following actors are presented to the user for use:
 
 - Untyped actor. A universal actor with no special purpose. Can receive and send messages to other actors. Can create child actors;
-- Routers. Actors are routers that route incoming requests between them children actors in accordance with the established routing strategy;
+- Routers. Actors are routers that route incoming requests between child actors in accordance with the established routing strategy;
   - Pool Router Actor. Actor is a router, at startup a pool of the same type of WorkerActors. You cannot directly send messages its Worker pool, all requests to the pool come only through it. It can send messages to other actors, all messages are received and routed to its own actor pool;
-  - Group Router Actor. Actor is a router. Can send messages to other actors, but all messages that it receives are routed to their children. It differs from PoolRouterActor in that a messages can be sent to its him children group directly, and not only through it;
+  - Group Router Actor. Actor is a router. Can send messages to other actors, but all messages that it receives are routed to their children. It differs from PoolRouterActor in that a messages can be sent to the routers children group directly, and not only through it;
 - Working actor. A worker actor uses PoolRouterActor in the pool of actors, similar to UntypedActor, but it cannot create child actors and has some internal differences in work.
 
 # Routing
