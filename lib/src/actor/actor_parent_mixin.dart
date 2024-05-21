@@ -3,8 +3,7 @@ part of theater.actor;
 mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
   final List<ActorCell> _children = [];
 
-  final StreamController<ActorError> _childErrorController =
-      StreamController.broadcast();
+  final StreamController<ActorError> _childErrorController = StreamController.broadcast();
 
   late final StreamSubscription<ActorError> _childErrorSubscription;
 
@@ -14,8 +13,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     var directive = _actorProperties.supervisorStrategy.decide(error.object);
 
     if (_loggingProperties.isInfoEnabled) {
-      logger.info(ActorSupervisingDivideLog(
-          _actorProperties.path, actorCell.path, directive, error.object));
+      logger.info(ActorSupervisingDivideLog(_actorProperties.path, actorCell.path, directive, error.object));
     }
 
     if (directive is RestartDirective) {
@@ -44,8 +42,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     return actorCell;
   }
 
-  Future<void> _restartChild(
-      ActorCell actorCell, RestartDirective directive) async {
+  Future<void> _restartChild(ActorCell actorCell, RestartDirective directive) async {
     var restartDelay = directive.delay;
 
     if (_actorProperties.supervisorStrategy is OneForOneStrategy) {
@@ -131,9 +128,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     if (actorCell != null) {
       await actorCell.kill();
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 
@@ -161,9 +156,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
 
       await actorCell.start();
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 
@@ -187,9 +180,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     if (actorCell != null) {
       await actorCell.pause();
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 
@@ -213,9 +204,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     if (actorCell != null) {
       await actorCell.resume();
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 
@@ -239,9 +228,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     if (actorCell != null) {
       await actorCell.kill();
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 
@@ -267,9 +254,7 @@ mixin ActorParentMixin<P extends SupervisorActorProperties> on ActorContext<P> {
     if (actorCell != null) {
       await _deleteChild(actorCell);
     } else {
-      throw ActorContextException(
-          message:
-              'actor has no child with path ' + actorPath.toString() + '.');
+      throw ActorContextException(message: 'actor has no child with path ' + actorPath.toString() + '.');
     }
   }
 

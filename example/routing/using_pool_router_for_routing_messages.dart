@@ -11,7 +11,10 @@ class TestActor extends UntypedActor {
 
     for (var i = 0; i < 5; i++) {
       // Send message to pool router
-      ref.send('Hello message №' + i.toString());
+      var m = 'Hello message $i';
+      ref.send(m);
+      MessageSubscription sub = ref.sendAndSubscribe(m);
+      print('response from sendAndSubscribe: ${await sub.getFirstResult()}');
     }
   }
 }
@@ -31,9 +34,9 @@ class TestWorker extends WorkerActor {
   Future<void> onStart(context) async {
     // Set handler to all String type messages which actor received
     context.receive<String>((message) async {
-      print('Received by the worker with path: ' + context.path.toString() + ', message: ' + message);
+      print('Received by the worker with path: ${context.path.toString()}, message: message');
 
-      return;
+      return MessageResult(data: 'Received by the worker with path: ${context.path.toString()}, message: $message');
     });
   }
 }
