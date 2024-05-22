@@ -39,4 +39,36 @@ mixin NodeActorRefFactoryMixin<P extends SupervisorActorProperties>
 
     return actorCell.ref;
   }
+
+  /// Checks if the register exist a reference to an actor with path - [path].
+  ///
+  /// You have two way how point out path to actor:
+  ///
+  /// - relative;
+  /// - absolute.
+  ///
+  /// The relative path is set from current actor.
+  ///
+  /// For example current actor has the name "my_actor", you can point out this path "system/root/user/my_actor/my_child" like "../my_child".
+  ///
+  /// Absolute path given by the full path to the actor from the name of the system of actors.
+  Future<bool> isExistLocalActorRef(String path) async {
+    if (_children.map((e) => e.path.toString()).contains(path)) {
+      return true;
+    }
+
+    var actorPath = _parsePath(path);
+
+    var receivePort = ReceivePort();
+
+    _actorProperties.actorSystemSendPort.send(
+        ActorSystemIsExistUserLocalActorRef(actorPath, receivePort.sendPort));
+
+    var result =
+        await receivePort.first as ActorSystemIsExistLocalActorRefResult;
+
+    receivePort.close();
+
+    return result.isExist;
+  }
 }
