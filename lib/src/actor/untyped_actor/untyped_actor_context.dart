@@ -2,19 +2,25 @@ part of theater.actor;
 
 /// The class used by [UntypedActor] to communicate with other actors in the actor system, receive messages from other actors.
 class UntypedActorContext extends NodeActorContext<UntypedActorProperties>
-    with NodeActorRefFactoryMixin, ActorMessageReceiverMixin, UserActorContextMixin<UntypedActorProperties> {
-  UntypedActorContext(IsolateContext isolateContext, UntypedActorProperties actorProperties) : super(isolateContext, actorProperties) {
+    with
+        NodeActorRefFactoryMixin,
+        ActorMessageReceiverMixin,
+        UserActorContextMixin<UntypedActorProperties> {
+  UntypedActorContext(
+      IsolateContext isolateContext, UntypedActorProperties actorProperties)
+      : super(isolateContext, actorProperties) {
     _isolateContext.messages.listen(_handleMessageFromSupervisor);
 
-    _childErrorSubscription = _childErrorController.stream.listen((error) => _handleChildError(error));
+    _childErrorSubscription = _childErrorController.stream
+        .listen((error) => _handleChildError(error));
   }
 
   @override
   Future<LocalActorRef?> getLocalActorRef(String path) async {
     ActorPath actorPath = _parsePath(path);
     var children = _children.where((c) => c.path == actorPath);
-    
-    if (children.isNotEmpty) return Future.value(children.first.ref;);
+
+    if (children.isNotEmpty) return Future.value(children.first.ref);
 
     return super.getLocalActorRef(path);
   }
@@ -37,15 +43,20 @@ class UntypedActorContext extends NodeActorContext<UntypedActorProperties>
   void _handleRoutingMessage(RoutingMessage message) {
     if (message.recipientPath == _actorProperties.path) {
       if (message is ActorRoutingMessage) {
-        _actorProperties.actorRef.send(ActorMailboxMessage(message.data, feedbackPort: message.feedbackPort));
+        _actorProperties.actorRef.send(ActorMailboxMessage(message.data,
+            feedbackPort: message.feedbackPort));
       }
     } else {
       if (message.recipientPath.depthLevel > _actorProperties.path.depthLevel &&
-          List.of(message.recipientPath.segments.getRange(0, _actorProperties.path.segments.length)).equal(_actorProperties.path.segments)) {
+          List.of(message.recipientPath.segments
+                  .getRange(0, _actorProperties.path.segments.length))
+              .equal(_actorProperties.path.segments)) {
         var isSended = false;
 
         for (var child in _children) {
-          if (List.from(message.recipientPath.segments.getRange(0, _actorProperties.path.segments.length + 1)).equal(child.path.segments)) {
+          if (List.from(message.recipientPath.segments
+                  .getRange(0, _actorProperties.path.segments.length + 1))
+              .equal(child.path.segments)) {
             child.ref.send(message);
             isSended = true;
             break;
